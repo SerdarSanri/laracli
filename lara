@@ -1,0 +1,61 @@
+#! /usr/bin/env php
+
+<?php
+
+use Symfony\Component\Console\Application;
+
+$_ENV['HOME'] = getenv('HOME');
+$_ENV['VAGRANT_DOTFILE_PATH'] = homestead_path().DIRECTORY_SEPARATOR.'.vagrant';
+
+if (file_exists(__DIR__.'/vendor/autoload.php')) {
+    require __DIR__.'/vendor/autoload.php';
+} else {
+    require __DIR__.'/../../autoload.php';
+}
+
+function homestead_path()
+{
+    if (isset($_SERVER['HOME'])) {
+        return $_SERVER['HOME'].'/.homestead';
+    } else {
+        return $_SERVER['HOMEDRIVE'].$_SERVER['HOMEPATH'].DIRECTORY_SEPARATOR.'.homestead';
+    }
+}
+
+$app = new Application('LaravelToolkit', '1.0.0 BETA');
+
+try
+{
+    $pdo = new PDO('sqlite:db.sqlite');
+
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
+catch (Exception $exception)
+{
+    echo 'Could not connect to the database';
+    exit(1);
+}
+
+$dbAdapter = new LaravelToolkit\DatabaseAdapter($pdo);
+
+$app->add(new LaravelToolkit\Lumen\NewLumenCommand);
+$app->add(new LaravelToolkit\Laravel\NewLaravelCommand);
+$app->add(new LaravelToolkit\Spark\InstallCommand);
+
+$app->add(new LaravelToolkit\Homestead\DestroyCommand);
+$app->add(new LaravelToolkit\Homestead\EditCommand);
+$app->add(new LaravelToolkit\Homestead\HaltCommand);
+$app->add(new LaravelToolkit\Homestead\InitCommand);
+$app->add(new LaravelToolkit\Homestead\MakeCommand);
+$app->add(new LaravelToolkit\Homestead\ProvisionCommand);
+$app->add(new LaravelToolkit\Homestead\ResumeCommand);
+$app->add(new LaravelToolkit\Homestead\RunCommand);
+$app->add(new LaravelToolkit\Homestead\UpCommand);
+$app->add(new LaravelToolkit\Homestead\UpdateCommand);
+$app->add(new LaravelToolkit\Homestead\SshCommand);
+$app->add(new LaravelToolkit\Homestead\SshConfigCommand);
+$app->add(new LaravelToolkit\Homestead\StatusCommand);
+$app->add(new LaravelToolkit\Homestead\SuspendCommand);
+
+$app->run();
