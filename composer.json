@@ -1,5 +1,5 @@
 {
-    "name": "laraToolkit/lara-cli",
+    "name": "laraToolkit/laracli",
     "description": "anserv.co Commandline Application",
     "keywords": ["anserv", "cli"],
     "license": "MIT",
