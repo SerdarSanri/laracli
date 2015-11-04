@@ -13,8 +13,7 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require __DIR__.'/../../autoload.php';
 }
 
-function homestead_path()
-{
+function homestead_path() {
     if (isset($_SERVER['HOME'])) {
         return $_SERVER['HOME'].'/.homestead';
     } else {
@@ -24,22 +23,7 @@ function homestead_path()
 
 $app = new Application('LaravelToolkit', '1.0.1 BETA');
 
-try
-{
-    $pdo = new PDO('sqlite:db.sqlite');
-
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-}
-catch (Exception $exception)
-{
-    echo 'Could not connect to the database';
-    exit(1);
-}
-
-$dbAdapter = new LaravelToolkit\DatabaseAdapter($pdo);
-
-if (file_exists(__DIR__.'artisan')) {
+if (file_exists('artisan')) {
     $app->add(new LaravelToolkit\Spark\InstallCommand);
 
     $app->add(new LaravelToolkit\Homestead\MakeCommand);
@@ -63,6 +47,7 @@ if (file_exists(__DIR__.'artisan')) {
 } else {
     $app->add(new LaravelToolkit\Lumen\NewLumenCommand);
     $app->add(new LaravelToolkit\Laravel\NewLaravelCommand);
+
     $app->add(new LaravelToolkit\Homestead\DestroyCommand);
     $app->add(new LaravelToolkit\Homestead\EditCommand);
     $app->add(new LaravelToolkit\Homestead\HaltCommand);

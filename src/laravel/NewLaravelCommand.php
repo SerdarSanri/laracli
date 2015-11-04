@@ -18,13 +18,13 @@ class NewLaravelCommand extends Command
     *
     * @return void
     */
-    protected function configure()
-    {
+    protected function configure() {
         $this
             ->setName('project:new')
             ->setDescription('Create a new Laravel application')
             ->addArgument('name', InputArgument::REQUIRED);
     }
+
     /**
      * Execute the command.
      *
@@ -32,61 +32,73 @@ class NewLaravelCommand extends Command
      * @param  OutputInterface  $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    protected function execute(InputInterface $input, OutputInterface $output) {
         $this->verifyApplicationDoesntExist(
             $directory = getcwd().'/'.$input->getArgument('name'),
             $output
         );
+
         $output->writeln('<info>Crafting application...</info>');
+
         $this->download($zipFile = $this->makeFilename())
              ->extract($zipFile, $directory)
              ->cleanUp($zipFile);
+
+        if (!file_exists($directory.'/.lara/project.sqlite')) {
+            mkdir($directory.'/.lara', 0777, true);
+
+            $database = fopen($directory.'/.lara/project.sqlite', "w") or die("Unable to open database!");
+            fclose($database);
+        }
+
         $composer = $this->findComposer();
         $commands = [
             $composer.' run-script post-root-package-install',
             $composer.' run-script post-install-cmd',
             $composer.' run-script post-create-project-cmd',
         ];
+
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
+
         $output->writeln('<comment>Application ready! Build something amazing.</comment>');
     }
+
     /**
      * Verify that the application does not already exist.
      *
      * @param  string  $directory
      * @return void
      */
-    protected function verifyApplicationDoesntExist($directory, OutputInterface $output)
-    {
+    protected function verifyApplicationDoesntExist($directory, OutputInterface $output) {
         if (is_dir($directory)) {
             throw new RuntimeException('Application already exists!');
         }
     }
+
     /**
      * Generate a random temporary filename.
      *
      * @return string
      */
-    protected function makeFilename()
-    {
+    protected function makeFilename() {
         return getcwd().'/laravel_'.md5(time().uniqid()).'.zip';
     }
+
     /**
      * Download the temporary Zip to the given file.
      *
      * @param  string  $zipFile
      * @return $this
      */
-    protected function download($zipFile)
-    {
+    protected function download($zipFile) {
         $response = (new Client)->get('http://cabinet.laravel.com/latest.zip');
         file_put_contents($zipFile, $response->getBody());
         return $this;
     }
+
     /**
      * Extract the zip file into the given directory.
      *
@@ -94,33 +106,32 @@ class NewLaravelCommand extends Command
      * @param  string  $directory
      * @return $this
      */
-    protected function extract($zipFile, $directory)
-    {
+    protected function extract($zipFile, $directory) {
         $archive = new ZipArchive;
         $archive->open($zipFile);
         $archive->extractTo($directory);
         $archive->close();
         return $this;
     }
+
     /**
      * Clean-up the Zip file.
      *
      * @param  string  $zipFile
      * @return $this
      */
-    protected function cleanUp($zipFile)
-    {
+    protected function cleanUp($zipFile) {
         @chmod($zipFile, 0777);
         @unlink($zipFile);
         return $this;
     }
+
     /**
      * Get the composer command for the environment.
      *
      * @return string
      */
-    protected function findComposer()
-    {
+    protected function findComposer() {
         if (file_exists(getcwd().'/composer.phar')) {
             return '"'.PHP_BINARY.'" composer.phar';
         }

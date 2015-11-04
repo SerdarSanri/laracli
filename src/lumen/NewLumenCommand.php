@@ -45,6 +45,13 @@ class NewLumenCommand extends Command
              ->extract($zipFile, $directory)
              ->cleanUp($zipFile);
 
+        if (!file_exists($directory.'/.lara/project.sqlite')) {
+            mkdir($directory.'/.lara', 0777, true);
+
+            $database = fopen($directory.'/.lara/project.sqlite', "w") or die("Unable to open database!");
+            fclose($database);
+        }
+
         $output->writeln('<comment>Application ready! Build something amazing.</comment>');
     }
 
