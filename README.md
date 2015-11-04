@@ -30,8 +30,10 @@ Installation
 
 First, download the Laravel Toolkit using Composer.
 
-`composer global require "lara-toolkit/lara"`
+`composer global require "laravel-toolkit/lara-cli"`
 
 Make sure to place the `~/.composer/vendor/bin` directory in your PATH so the `lara` executable can be located by your system.
 
 Once installed, the simple `lara project:new` command will create a fresh Laravel installation in the directory you specify. For instance, `lara project:new blog` would create a directory named blog containing a fresh Laravel installation with all dependencies installed. This method of installation is much faster than installing via Composer.
+
+With `lara micro:new` you will create a new Lumen-Application.
