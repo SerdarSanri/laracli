@@ -21,7 +21,7 @@ function homestead_path() {
     }
 }
 
-$app = new Application('LaravelToolkit', '1.0.1 BETA');
+$app = new Application('LaravelToolkit', '1.0.3 BETA');
 
 if (file_exists('artisan')) {
     $app->add(new LaravelToolkit\Spark\InstallCommand);
