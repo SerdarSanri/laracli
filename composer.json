@@ -1,7 +1,7 @@
 {
     "name": "laravel-toolkit/lara-cli",
     "description": "anserv.co Commandline Application",
-    "keywords": ["anserv", "cli"],
+    "keywords": ["laravel", "toolkit", "cli"],
     "license": "MIT",
     "authors": [
         {
