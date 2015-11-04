@@ -22,7 +22,7 @@ function homestead_path()
     }
 }
 
-$app = new Application('LaravelToolkit', '1.0.0 BETA');
+$app = new Application('LaravelToolkit', '1.0.1 BETA');
 
 try
 {
@@ -39,23 +39,43 @@ catch (Exception $exception)
 
 $dbAdapter = new LaravelToolkit\DatabaseAdapter($pdo);
 
-$app->add(new LaravelToolkit\Lumen\NewLumenCommand);
-$app->add(new LaravelToolkit\Laravel\NewLaravelCommand);
-$app->add(new LaravelToolkit\Spark\InstallCommand);
+if (file_exists(__DIR__.'artisan')) {
+    $app->add(new LaravelToolkit\Spark\InstallCommand);
 
-$app->add(new LaravelToolkit\Homestead\DestroyCommand);
-$app->add(new LaravelToolkit\Homestead\EditCommand);
-$app->add(new LaravelToolkit\Homestead\HaltCommand);
-$app->add(new LaravelToolkit\Homestead\InitCommand);
-$app->add(new LaravelToolkit\Homestead\MakeCommand);
-$app->add(new LaravelToolkit\Homestead\ProvisionCommand);
-$app->add(new LaravelToolkit\Homestead\ResumeCommand);
-$app->add(new LaravelToolkit\Homestead\RunCommand);
-$app->add(new LaravelToolkit\Homestead\UpCommand);
-$app->add(new LaravelToolkit\Homestead\UpdateCommand);
-$app->add(new LaravelToolkit\Homestead\SshCommand);
-$app->add(new LaravelToolkit\Homestead\SshConfigCommand);
-$app->add(new LaravelToolkit\Homestead\StatusCommand);
-$app->add(new LaravelToolkit\Homestead\SuspendCommand);
+    $app->add(new LaravelToolkit\Homestead\MakeCommand);
+    $app->add(new LaravelToolkit\Homestead\DestroyCommand);
+    $app->add(new LaravelToolkit\Homestead\EditCommand);
+    $app->add(new LaravelToolkit\Homestead\HaltCommand);
+    $app->add(new LaravelToolkit\Homestead\InitCommand);
+    $app->add(new LaravelToolkit\Homestead\ProvisionCommand);
+    $app->add(new LaravelToolkit\Homestead\ResumeCommand);
+    $app->add(new LaravelToolkit\Homestead\RunCommand);
+    $app->add(new LaravelToolkit\Homestead\UpCommand);
+    $app->add(new LaravelToolkit\Homestead\UpdateCommand);
+    $app->add(new LaravelToolkit\Homestead\SshCommand);
+    $app->add(new LaravelToolkit\Homestead\SshConfigCommand);
+    $app->add(new LaravelToolkit\Homestead\StatusCommand);
+    $app->add(new LaravelToolkit\Homestead\SuspendCommand);
+
+    $app->add(new LaravelToolkit\Envoy\Console\RunCommand);
+    $app->add(new LaravelToolkit\Envoy\Console\SshCommand);
+    $app->add(new LaravelToolkit\Envoy\Console\InitCommand);
+} else {
+    $app->add(new LaravelToolkit\Lumen\NewLumenCommand);
+    $app->add(new LaravelToolkit\Laravel\NewLaravelCommand);
+    $app->add(new LaravelToolkit\Homestead\DestroyCommand);
+    $app->add(new LaravelToolkit\Homestead\EditCommand);
+    $app->add(new LaravelToolkit\Homestead\HaltCommand);
+    $app->add(new LaravelToolkit\Homestead\InitCommand);
+    $app->add(new LaravelToolkit\Homestead\ProvisionCommand);
+    $app->add(new LaravelToolkit\Homestead\ResumeCommand);
+    $app->add(new LaravelToolkit\Homestead\RunCommand);
+    $app->add(new LaravelToolkit\Homestead\UpCommand);
+    $app->add(new LaravelToolkit\Homestead\UpdateCommand);
+    $app->add(new LaravelToolkit\Homestead\SshCommand);
+    $app->add(new LaravelToolkit\Homestead\SshConfigCommand);
+    $app->add(new LaravelToolkit\Homestead\StatusCommand);
+    $app->add(new LaravelToolkit\Homestead\SuspendCommand);
+}
 
 $app->run();
